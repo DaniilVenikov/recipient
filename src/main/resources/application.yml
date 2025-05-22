@@ -1,0 +1,42 @@
+server:
+  port: 8087
+
+topic:
+  name: t.food.order
+
+spring:
+  application:
+    name: recipient
+  kafka:
+    consumer:
+      group-id: recipient_group
+      auto-offset-reset: latest
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      enable-auto-commit: true
+      isolation-level: read_committed
+      security:
+        protocol: PLAINTEXT
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/carpark
+    username: root
+    password: sanechka_04.09
+
+  jpa:
+#    hibernate:
+#      ddl-auto: validate
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+
+  liquibase:
+    change-log: classpath:changelog/db.changelog-master.yml
+    enabled: true
+
+application:
+  kafka:
+    notifierTopic: t.notice
